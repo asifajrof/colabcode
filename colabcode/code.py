@@ -48,12 +48,13 @@ class ColabCode:
 
     @staticmethod
     def _install_code():
-        subprocess.run(["wget", "https://code-server.dev/install.sh"], stdout=subprocess.PIPE)
-        subprocess.run(
-            # ["sh", "install.sh", "--version", f"{CODESERVER_VERSION}"],
-            ["sh", "install.sh"],
-            stdout=subprocess.PIPE,
-        )
+        result = subprocess.run(["wget", "https://code-server.dev/install.sh"], stdout=subprocess.PIPE)
+        if result.returncode != 0:
+            raise RuntimeError("Failed to download installation script")
+            
+        result = subprocess.run(["sh", "install.sh"], stdout=subprocess.PIPE)
+        if result.returncode != 0:
+            raise RuntimeError("Failed to run installation script")
 
     @staticmethod
     def _install_extensions():
